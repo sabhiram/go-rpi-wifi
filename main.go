@@ -4,17 +4,29 @@ package main
 
 import (
 	"log"
+
+	"github.com/sabhiram/go-rpi-wifi/wifi"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
 
-func main() {
-	log.Printf("Hello go-rpi-wifi!")
-	if err := checkDependencies(); err != nil {
-		log.Fatalf("dependency error: %s\n", err.Error())
+func fatalOnErr(err error) {
+	if err != nil {
+		log.Fatalf(`Fatal error encountered : %s.
+Program Aborting
+`, err.Error())
 	}
+}
 
-	log.Printf("All deps good!\n")
+////////////////////////////////////////////////////////////////////////////////
+
+func main() {
+	fatalOnErr(checkDependencies())
+
+	w, err := wifi.New("wlan0")
+	fatalOnErr(err)
+
+	w.DoTest()
 
 	/*
 
