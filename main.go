@@ -23,18 +23,16 @@ Program Aborting
 func main() {
 	fatalOnErr(checkDependencies())
 
-	w, err := wifi.New("wlan0")
+	w, err := wifi.New("wlan0", "rpi-config-ap")
 	fatalOnErr(err)
 
-	w.DoTest()
+	fatalOnErr(w.RescanInfo())
 
-	/*
-
-	   1. Detect if we have wifi -- if we do, done
-	   2. If we don't -- setup AP
-	   3. Start server and host static files
-
-	*/
+	if w.IsConnectedToNetwork() {
+		log.Printf("Connected to wireless network with IP: %s\n", w.GetIP())
+	} else {
+		log.Printf("Not connected to WIFI - TOOD: Enable AP here!\n")
+	}
 }
 
 func init() {
